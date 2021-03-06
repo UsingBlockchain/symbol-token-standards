@@ -15,6 +15,7 @@
  */
 import {
   RepositoryFactoryHttp,
+  RepositoryFactoryConfig,
   NetworkType,
   NetworkConfiguration,
   MosaicId,
@@ -57,10 +58,25 @@ export class NetworkConfig {
     public generationHash: string,
 
     /**
+     * @description The network epoch adjustment
+     */
+    public epochAdjustment: number,
+
+    /**
      * @description The network fee mosaic id
      */
     public feeMosaicId: MosaicId,
+
+    /**
+     * @description (Optional) The node public key
+     */
+    public nodePublicKey?: string
   ) {
-    this.factoryHttp = new RepositoryFactoryHttp(gatewayUrl, networkType, generationHash)
+    this.factoryHttp = new RepositoryFactoryHttp(gatewayUrl, {
+      networkType,
+      generationHash,
+      epochAdjustment,
+      nodePublicKey,
+    } as RepositoryFactoryConfig)
   }
 }

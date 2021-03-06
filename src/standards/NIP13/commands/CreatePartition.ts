@@ -22,7 +22,7 @@ import {
   UInt64,
   MultisigAccountModificationTransaction,
   AccountMosaicRestrictionTransaction,
-  AccountRestrictionFlags,
+  MosaicRestrictionFlag,
   MosaicAddressRestrictionTransaction,
   KeyGenerator,
   AccountMetadataTransaction,
@@ -106,7 +106,7 @@ export class CreatePartition extends AbstractCommand {
       this.operators.length, // all operators for minApproval (holder is optional)
       this.operators.length, // all except one for minRemoval (holder is optional)
       this.operators // operators
-          .concat([holder]), // + token holder
+          .concat([holder.address]), // + token holder
       [],
       this.context.network.networkType,
       undefined, // maxFee 0 for inner
@@ -118,7 +118,7 @@ export class CreatePartition extends AbstractCommand {
     // Transaction 02: AccountMetadataTransaction
     transactions.push(AccountMetadataTransaction.create(
       this.context.parameters.deadline,
-      partition.publicKey,
+      partition.address,
       KeyGenerator.generateUInt64Key('NAME'),
       name.length,
       name,
@@ -132,7 +132,7 @@ export class CreatePartition extends AbstractCommand {
     // Transaction 03: AccountMetadataTransaction
     transactions.push(AccountMetadataTransaction.create(
       this.context.parameters.deadline,
-      partition.publicKey,
+      partition.address,
       KeyGenerator.generateUInt64Key('OWNER'),
       holder.address.plain().length,
       holder.address.plain(),
@@ -147,7 +147,7 @@ export class CreatePartition extends AbstractCommand {
     // :note: This transaction authorizes mosaicId and networkCurrencyMosaicId for partition
     transactions.push(AccountMosaicRestrictionTransaction.create(
       this.context.parameters.deadline,
-      AccountRestrictionFlags.AllowMosaic,
+      MosaicRestrictionFlag.AllowMosaic,
       [this.identifier.toMosaicId(), this.context.network.feeMosaicId], // MosaicId & networkCurrencyMosaicId
       [],
       this.context.network.networkType,

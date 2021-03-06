@@ -16,7 +16,6 @@
 import {
   PublicAccount,
   Address,
-  QueryParams,
   Metadata,
   MetadataType,
 } from 'symbol-sdk'
@@ -83,8 +82,8 @@ export class MetadataService extends Service {
     return ({
       ...metadataEntry,
       scopedMetadataKey: metadataEntry.scopedMetadataKey.toHex(),
-      senderAddress: Address.createFromPublicKey(metadataEntry.senderPublicKey, this.context.network.networkType),
-      targetAddress: Address.createFromPublicKey(metadataEntry.targetPublicKey, this.context.network.networkType),
+      senderAddress: metadataEntry.sourceAddress,
+      targetAddress: metadataEntry.targetAddress,
       metadataType: MetadataType.Mosaic,
       targetId: metadataEntry.targetId ? metadataEntry.targetId.toHex() : undefined,
       metadataValue: metadataEntry.value
@@ -103,10 +102,10 @@ export class MetadataService extends Service {
   ): Promise<SecuritiesMetadata> {
     // read metadata entries for token from network
     const entries = await this.context.network.factoryHttp.createMetadataRepository()
-      .getMosaicMetadata(tokenId.toMosaicId(), new QueryParams({ pageSize: 10, id: undefined }))
+      .search({ targetId: tokenId.toMosaicId() })
       .toPromise()
 
-    const mosaicMetadata = entries.map((metadata: Metadata) => this.formatMetadata(metadata))
+    const mosaicMetadata = entries.data.map((metadata: Metadata) => this.formatMetadata(metadata))
 
     // overwrite `scopeMetadataKey` values to rewrite keys
     const metadataFields = Object.keys(MetadataService.KNOWN_METADATAS)

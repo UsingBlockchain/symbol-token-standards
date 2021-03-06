@@ -96,7 +96,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 02: MosaicMetadataTransaction updating `MIC`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('MIC'),
         this.identifier.toMosaicId(),
         metadata.mic.length - this.metadata!.mic.length,
@@ -113,7 +113,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 03: MosaicMetadataTransaction updating `ISIN`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('ISIN'),
         this.identifier.toMosaicId(),
         metadata.isin.length - this.metadata!.isin.length,
@@ -130,7 +130,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 04: MosaicMetadataTransaction updating `ISO_10962`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('ISO_10962'),
         this.identifier.toMosaicId(),
         metadata.classification.length - this.metadata!.classification.length,
@@ -147,7 +147,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 05: MosaicMetadataTransaction attaching `Website`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Website'),
         this.identifier.toMosaicId(),
         metadata.website.length - this.metadata!.website.length,
@@ -164,7 +164,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 06: MosaicMetadataTransaction attaching `Sector`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Sector'),
         this.identifier.toMosaicId(),
         metadata.sector.length - this.metadata!.sector.length,
@@ -181,7 +181,7 @@ export class ModifyMetadata extends AbstractCommand {
       // Transaction 07: MosaicMetadataTransaction attaching `Industry`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Industry'),
         this.identifier.toMosaicId(),
         metadata.industry.length - this.metadata!.industry.length,
@@ -204,7 +204,7 @@ export class ModifyMetadata extends AbstractCommand {
 
         transactions.push(MosaicMetadataTransaction.create(
           this.context.parameters.deadline,
-          this.target.publicKey,
+          this.target.address,
           KeyGenerator.generateUInt64Key(customKeys[k]),
           this.identifier.toMosaicId(),
           metadata.customMetadata[customKeys[k]].length - oldValue.length,

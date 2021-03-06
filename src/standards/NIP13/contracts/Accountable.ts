@@ -76,10 +76,9 @@ export class Accountable {
   protected getAccount(
     derivationPath: string,
   ): Account {
-    return this.keyProvider.getChildAccount(
+    return Account.createFromPrivateKey(this.keyProvider.getChildAccountPrivateKey(
       derivationPath,
-      this.network.networkType,
-    )
+    ), this.network.networkType)
   }
 
   /**

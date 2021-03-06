@@ -35,10 +35,13 @@ export const getTestContext = (
       nodeUrl,
       getTestAccount('operator1').address.networkType,
       'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+      1573430400,
       new MosaicId('519FC24B9223E0B4'),
+      'DummyNodePublicKey',
     ),
     new TransactionParameters(
-      Deadline.create(),
+      1573430400,
+      Deadline.create(1573430400),
       undefined, // maxFee
     ),
     undefined,

@@ -71,6 +71,6 @@ export class TokenIdentifier {
    * @return {MosaicId}
    */
   public toMosaicId(): MosaicId {
-    return MosaicId.createFromNonce(this.nonce, this.target)
+    return MosaicId.createFromNonce(this.nonce, this.target.address)
   }
 }

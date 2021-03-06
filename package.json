@@ -8,17 +8,17 @@
     "test": "test"
   },
   "dependencies": {
-    "symbol-sdk": "^0.18.0",
-    "symbol-uri-scheme": "^0.4.3",
-    "symbol-hd-wallets": "^0.10.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.6.6",
+    "symbol-hd-wallets": "^0.14.0",
+    "symbol-sdk": "^0.23.2",
+    "symbol-uri-scheme": "^0.6.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.9",
+    "@types/chai": "^4.2.15",
     "@types/mocha": "^5.2.7",
-    "@typescript-eslint/eslint-plugin": "^2.15.0",
-    "@typescript-eslint/parser": "^2.15.0",
-    "chai": "^4.1.2",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "chai": "^4.3.3",
     "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "mocha": "^5.2.0",
@@ -27,7 +27,8 @@
     "ts-node": "^7.0.0",
     "typedoc": "^0.15.0",
     "typemoq": "^2.1.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.9",
+    "utf8": "3.0.0"
   },
   "scripts": {
     "lint": "eslint src/ --ext .ts && eslint test/ --ext .ts",

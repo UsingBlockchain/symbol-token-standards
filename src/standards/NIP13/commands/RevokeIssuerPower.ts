@@ -75,7 +75,7 @@ export class RevokeIssuerPower extends AbstractCommand {
 
     // find operator
     const the_operator = this.operators.find(
-      o => o.address.equals(operator.address)
+      o => o.equals(operator)
     )
 
     // `RevokeIssuerPower` should only be executed to add operators
@@ -106,7 +106,7 @@ export class RevokeIssuerPower extends AbstractCommand {
       1, // removing 1 operator
       1, // removing 1 operator
       [],
-      [operator],
+      [operator.address],
       this.context.network.networkType,
       undefined, // maxFee 0 for inner
     ))
@@ -124,7 +124,7 @@ export class RevokeIssuerPower extends AbstractCommand {
         1, // removing 1 operator
         1, // removing 1 operator
         [],
-        [operator],
+        [operator.address],
         this.context.network.networkType,
         undefined, // maxFee 0 for inner
       ))

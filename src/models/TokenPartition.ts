@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 import {
-  Account,
-  Convert,
-  MosaicId,
-  MosaicNonce,
+  Address,
   PublicAccount,
-  UInt64,
-  SHA3Hasher,
-  NetworkType,
 } from 'symbol-sdk'
-import { Wallet } from 'symbol-hd-wallets'
 
 /**
  * @class TokenPartition
  * @package models
  * @since v0.1.0
  * @description Model that describes partitions of tokens. A partition
- *              is created around an \a owner public key (32 bytes) and
+ *              is created around an \a owner address (32 bytes) and
  *              an \a amount (1-8 bytes) and a \a name
  */
 export class TokenPartition {
@@ -48,7 +41,7 @@ export class TokenPartition {
     /**
      * @description The partition owner
      */
-    public owner: PublicAccount,
+    public owner: Address,
 
     /**
      * @description The partition account
@@ -72,8 +65,7 @@ export class TokenPartition {
   public equals(
     rhs: TokenPartition
   ): boolean {
-    return this.owner.publicKey === rhs.owner.publicKey
-        && this.owner.address.equals(rhs.owner.address)
+    return this.owner.equals(rhs.owner)
         && this.account.publicKey === rhs.account.publicKey
         && this.account.address.equals(rhs.account.address)
         && this.amount === rhs.amount

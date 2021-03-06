@@ -30,11 +30,13 @@ const token = new NIP13.Token(
     'http://api-01.us-west-1.symboldev.network:3000',
     NetworkType.TEST_NET,
     'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4',
+    1573430400,
     new MosaicId('519FC24B9223E0B4'),
+    'DummyNodePublicKey',
   ),
   mnemonic,
 )
-const defaultNIP13 = 'TDEE6S3YUMS6A37XSW3JB7VPT7QTMYCYKDUACQU4' // m/44'/4343'/1313'/0'/0'
+const defaultNIP13 = 'TDEE6S3YUMS6A37XSW3JB7VPT7QTMYCYKDUACQQ' // m/44'/4343'/1313'/0'/0'
 
 describe('NIP13 Standard --->', () => {
   it('Revision should be 1', () => {

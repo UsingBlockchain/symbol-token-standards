@@ -26,7 +26,7 @@ import {
   AccountMetadataTransaction,
   KeyGenerator,
   AccountMosaicRestrictionTransaction,
-  AccountRestrictionFlags,
+  MosaicRestrictionFlag,
   MosaicAddressRestrictionTransaction,
 } from 'symbol-sdk'
 
@@ -188,7 +188,7 @@ export class LockBalance extends AbstractCommand {
       this.context.parameters.deadline,
       1, // target account manages
       1, // target account manages
-      [this.target], // **target** account is made cosignatory (multi-level)
+      [this.target.address], // **target** account is made cosignatory (multi-level)
       [],
       this.context.network.networkType,
       undefined, // maxFee 0 for inner
@@ -200,7 +200,7 @@ export class LockBalance extends AbstractCommand {
     // Transaction 02: AccountMetadataTransaction
     transactions.push(AccountMetadataTransaction.create(
       this.context.parameters.deadline,
-      partition.publicKey,
+      partition.address,
       KeyGenerator.generateUInt64Key('Is_Lock'),
       1,
       '1',
@@ -215,7 +215,7 @@ export class LockBalance extends AbstractCommand {
     // :note: This transaction authorizes mosaicId and networkCurrencyMosaicId for partition
     transactions.push(AccountMosaicRestrictionTransaction.create(
       this.context.parameters.deadline,
-      AccountRestrictionFlags.AllowMosaic,
+      MosaicRestrictionFlag.AllowMosaic,
       [this.identifier.toMosaicId(), this.context.network.feeMosaicId], // MosaicId & networkCurrencyMosaicId
       [],
       this.context.network.networkType,

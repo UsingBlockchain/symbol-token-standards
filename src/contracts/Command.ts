@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PublicAccount } from 'symbol-sdk'
+import { PublicAccount, Transaction } from 'symbol-sdk'
 import { TransactionURI } from 'symbol-uri-scheme'
 
 // internal dependencies
@@ -70,5 +70,5 @@ export interface Command {
   execute(
     actor: PublicAccount,
     argv: CommandOption[] | undefined,
-  ): TransactionURI
+  ): TransactionURI<Transaction>
 }

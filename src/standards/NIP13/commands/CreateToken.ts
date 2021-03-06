@@ -35,7 +35,7 @@ import {
   MosaicMetadataTransaction,
   KeyGenerator,
   AccountMosaicRestrictionTransaction,
-  AccountRestrictionFlags,
+  MosaicRestrictionFlag,
   MosaicGlobalRestrictionTransaction,
   MosaicAddressRestrictionTransaction,
   AccountMetadataTransaction,
@@ -174,7 +174,7 @@ export class CreateToken extends AbstractCommand {
     // Transaction 02: AccountMetadataTransaction
     transactions.push(AccountMetadataTransaction.create(
       this.context.parameters.deadline,
-      this.target.publicKey,
+      this.target.address,
       KeyGenerator.generateUInt64Key('NIP13'),
       this.identifier.id.length,
       this.identifier.id,
@@ -202,7 +202,7 @@ export class CreateToken extends AbstractCommand {
       else { 
         transaction = NamespaceRegistrationTransaction.createSubNamespace(
           this.context.parameters.deadline,
-          name,
+          parts[i],
           parts.slice(0, i - 1).join('.'), // parent
           this.context.network.networkType,
           undefined, // maxFee 0 for inner
@@ -217,7 +217,7 @@ export class CreateToken extends AbstractCommand {
 
     // Transaction 04: MosaicDefinitionTransaction
     const mosaicNonce = MosaicNonce.createFromHex(identifier)
-    const mosaicId = MosaicId.createFromNonce(mosaicNonce, target)
+    const mosaicId = MosaicId.createFromNonce(mosaicNonce, target.address)
     transactions.push(MosaicDefinitionTransaction.create(
       this.context.parameters.deadline,
       mosaicNonce,
@@ -263,7 +263,7 @@ export class CreateToken extends AbstractCommand {
     // Transaction 07: MosaicMetadataTransaction attaching `NAME`
     transactions.push(MosaicMetadataTransaction.create(
       this.context.parameters.deadline,
-      this.target.publicKey,
+      this.target.address,
       KeyGenerator.generateUInt64Key('NIP13'),
       mosaicId,
       this.identifier.id.length,
@@ -278,7 +278,7 @@ export class CreateToken extends AbstractCommand {
     // Transaction 08: MosaicMetadataTransaction attaching `NAME`
     transactions.push(MosaicMetadataTransaction.create(
       this.context.parameters.deadline,
-      this.target.publicKey,
+      this.target.address,
       KeyGenerator.generateUInt64Key('NAME'),
       mosaicId,
       fullName.length,
@@ -294,7 +294,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 09: MosaicMetadataTransaction attaching `MIC` market identifier code
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('MIC'),
         mosaicId,
         metadata.mic.length,
@@ -311,7 +311,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 10: MosaicMetadataTransaction attaching `ISIN` International Securities Identification Number
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('ISIN'),
         mosaicId,
         metadata.isin.length,
@@ -328,7 +328,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 11: MosaicMetadataTransaction attaching `ISO_10962`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('ISO_10962'),
         mosaicId,
         metadata.classification.length,
@@ -345,7 +345,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 12: MosaicMetadataTransaction attaching `Website`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Website'),
         mosaicId,
         metadata.website.length,
@@ -362,7 +362,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 13: MosaicMetadataTransaction attaching `Sector`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Sector'),
         mosaicId,
         metadata.sector.length,
@@ -379,7 +379,7 @@ export class CreateToken extends AbstractCommand {
       // Transaction 14: MosaicMetadataTransaction attaching `Industry`
       transactions.push(MosaicMetadataTransaction.create(
         this.context.parameters.deadline,
-        this.target.publicKey,
+        this.target.address,
         KeyGenerator.generateUInt64Key('Industry'),
         mosaicId,
         metadata.industry.length,
@@ -398,7 +398,7 @@ export class CreateToken extends AbstractCommand {
         // Transaction 15: MosaicMetadataTransaction attaching custom metadata
         transactions.push(MosaicMetadataTransaction.create(
           this.context.parameters.deadline,
-          this.target.publicKey,
+          this.target.address,
           KeyGenerator.generateUInt64Key(customKeys[k]),
           mosaicId,
           metadata.customMetadata[customKeys[k]].length,
@@ -415,7 +415,7 @@ export class CreateToken extends AbstractCommand {
     // Transaction 16: AccountMosaicRestrictionTransaction with MosaicId = mosaicId
     transactions.push(AccountMosaicRestrictionTransaction.create(
       this.context.parameters.deadline,
-      AccountRestrictionFlags.AllowMosaic,
+      MosaicRestrictionFlag.AllowMosaic,
       [mosaicId, this.context.network.feeMosaicId], // MosaicId & networkCurrencyMosaicId
       [],
       this.context.network.networkType,

@@ -38,9 +38,14 @@ export class TransactionParameters {
    */
   public constructor(
     /**
+     * @description The network epoch adjustment (in seconds)
+     */
+    public epochAjustment: number = 1573430400,
+
+    /**
      * @description The transaction deadline
      */
-    public deadline: Deadline = Deadline.create(),
+    public deadline: Deadline = Deadline.create(epochAjustment),
 
     /**
      * @description The transaction maxFee

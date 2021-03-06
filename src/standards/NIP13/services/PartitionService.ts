@@ -43,14 +43,14 @@ export class PartitionService extends Service {
    *
    * @param {TokenIdentifier}       tokenId     The token identifier.
    * @param {PublicAccount}         target      The deterministic account that represents the token.
-   * @param {PublicAccount[]}       operators   The list of operators of said token.
+   * @param {Address[]}             operators   The list of operators of said token.
    * @param {string}                descriptor  The token command descriptor used as a marker.
    * @return {TokenPartition[]}
    */
   public async getPartitionsFromNetwork(
     tokenId: TokenIdentifier,
     target: PublicAccount,
-    operators: PublicAccount[],
+    operators: Address[],
     descriptor: string = '',
   ): Promise<TokenPartition[]> {
     // initialize APIs
@@ -94,11 +94,11 @@ export class PartitionService extends Service {
 
       // Step 3.1) get partition account multisig graph
       const graph = await multisigHttp.getMultisigAccountGraphInfo(accountInfo.address).toPromise()
-      const owner: PublicAccount = multisig.getMultisigAccountInfoFromGraph(graph).map(
-        (cosig: MultisigAccountInfo) => cosig.cosignatories
+      const owner: Address = multisig.getMultisigAccountInfoFromGraph(graph).map(
+        (cosig: MultisigAccountInfo) => cosig.cosignatoryAddresses
       ).reduce((prev, it) => {
-        const ops = operators.map(o => o.address.plain())
-        return prev.concat(it.filter(c => !ops.includes(c.address.plain())))
+        const ops = operators.map(o => o.plain())
+        return prev.concat(it.filter(c => !ops.includes(c.plain())))
       }, [])[0] // force one
 
       // Step 3.2) fetch partition account incoming transaction

@@ -16,7 +16,6 @@
 import {
   PublicAccount,
   Address,
-  QueryParams,
   Metadata,
   MetadataType,
   MosaicId,

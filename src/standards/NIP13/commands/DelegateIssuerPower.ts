@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {
+  Address,
   InnerTransaction,
   Transaction,
   PublicAccount,
@@ -71,11 +72,11 @@ export class DelegateIssuerPower extends AbstractCommand {
    **/
   protected get transactions(): Transaction[] {
     // read external arguments
-    const operator = this.context.getInput('operator', new PublicAccount())
+    const operator = this.context.getInput('operator', new Address())
 
     // find operator
     const the_operator = this.operators.find(
-      o => o.address.equals(operator.address)
+      o => o.equals(operator)
     )
 
     // `DelegateIssuerPower` should only be executed to add operators

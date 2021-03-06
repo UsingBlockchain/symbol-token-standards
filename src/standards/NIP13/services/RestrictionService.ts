@@ -15,6 +15,10 @@
  */
 import {
   MosaicGlobalRestrictionItem,
+  MosaicAddressRestrictionItem,
+  MosaicRestriction,
+  RestrictionMosaicHttp,
+  Mosaic,
 } from 'symbol-sdk'
 
 // internal dependencies
@@ -46,18 +50,19 @@ export class RestrictionService extends Service {
   ): Promise<SecuritiesRestrictions> {
     // read restriction entries for token from network
     const config = await this.context.network.factoryHttp.createRestrictionMosaicRepository()
-      .getMosaicGlobalRestriction(tokenId.toMosaicId())
+      .search({ mosaicId: tokenId.toMosaicId() })
       .toPromise()
 
     const restrictions: SecuritiesRestrictionSet = {}
-    config.restrictions.forEach(
-      (value: MosaicGlobalRestrictionItem, key: string) => {
+    config.data.map((value: MosaicRestriction) => value.restrictions.forEach(
+      (restriction: MosaicAddressRestrictionItem, index: number) => {
+
         const entry: SecuritiesRestriction = {
-          [value.restrictionType]: parseInt(value.restrictionValue)
+          [value.entryType]: restriction.restrictionValue.compact()
         }
 
-        restrictions[key] = entry
-      })
+        restrictions[restriction.key.toHex()] = entry
+      }))
 
     // XXX map known restriction keys
 

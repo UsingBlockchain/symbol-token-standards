@@ -15,11 +15,13 @@
  */
 import { TransactionURI } from 'symbol-uri-scheme'
 import {
+  Address,
   Convert,
   PublicAccount,
   SHA3Hasher,
   MosaicInfo,
   MosaicId,
+  Transaction,
 } from 'symbol-sdk'
 import {
   MnemonicPassPhrase,
@@ -224,7 +226,7 @@ export class TokenStandard extends Accountable implements Standard {
   /**
    * @description List of operators of said token.
    */
-  public operators: PublicAccount[] = []
+  public operators: Address[] = []
 
   /**
    * @description Partition records of said token.
@@ -245,7 +247,7 @@ export class TokenStandard extends Accountable implements Standard {
    * @description Last token command execution result. URIs must be executed
    *              outside of the token standard.
    */
-  public result?: TransactionURI
+  public result?: TransactionURI<Transaction>
 
   /**
    * Constructs a NIP13 token standard object.
@@ -317,7 +319,7 @@ export class TokenStandard extends Accountable implements Standard {
     // consolidate/reduce graph
     const graph = await multisigHttp.getMultisigAccountGraphInfo(target).toPromise()
     this.operators = multisig.getMultisigAccountInfoFromGraph(graph).map(
-      m => m.cosignatories
+      m => m.cosignatoryAddresses
     ).reduce((prev, it) => prev.concat(it))
 
     // read mosaic
@@ -392,7 +394,7 @@ export class TokenStandard extends Accountable implements Standard {
     holder: PublicAccount,
     name: string,
     parameters: TransactionParameters,
-  ): Promise<TransactionURI> {
+  ): Promise<TransactionURI<Transaction>> {
     // generate deterministic token identifier
     const tokenId = this.identifier
 
@@ -423,7 +425,7 @@ export class TokenStandard extends Accountable implements Standard {
     recipient: PublicAccount,
     amount: number,
     parameters: TransactionParameters,
-  ): Promise<TransactionURI> {
+  ): Promise<TransactionURI<Transaction>> {
     // generate deterministic token identifier
     const tokenId = this.identifier
 
@@ -457,7 +459,7 @@ export class TokenStandard extends Accountable implements Standard {
     amount: number,
     data: string,
     parameters: TransactionParameters,
-  ): Promise<TransactionURI> {
+  ): Promise<TransactionURI<Transaction>> {
     // generate deterministic token identifier
     const tokenId = this.identifier
 
@@ -589,7 +591,7 @@ export class TokenStandard extends Accountable implements Standard {
     command: string,
     parameters: TransactionParameters,
     argv: CommandOption[],
-  ): Promise<TransactionURI> {
+  ): Promise<TransactionURI<Transaction>> {
     // read state from REST API
     await this.synchronize()
 
@@ -634,7 +636,7 @@ export class TokenStandard extends Accountable implements Standard {
     command: string,
     parameters: TransactionParameters,
     argv: CommandOption[],
-  ): TransactionURI {
+  ): TransactionURI<Transaction> {
     try {
       // instanciate command and context
       const context = this.getContext(actor, parameters, argv)

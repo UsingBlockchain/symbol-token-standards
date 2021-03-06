@@ -17,6 +17,7 @@ import {
   AggregateTransaction,
   PublicAccount,
   Transaction,
+  TransactionMapping,
 } from 'symbol-sdk'
 import { TransactionURI } from 'symbol-uri-scheme'
 
@@ -51,8 +52,8 @@ export class FakeCommand extends BaseCommand {
   public execute(
     actor: PublicAccount,
     argv: CommandOption[] | undefined,
-  ): TransactionURI {
-    return new TransactionURI('')
+  ): TransactionURI<Transaction> {
+    return new TransactionURI('', TransactionMapping.createFromPayload)
   }
 
   protected prepare(): AggregateTransaction | Transaction {

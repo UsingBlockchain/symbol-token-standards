@@ -39,9 +39,9 @@ export class MultisigService extends Service {
     graph: MultisigAccountGraphInfo,
   ): MultisigAccountInfo[] {
     // get addresses
-    const infos = [...graph.multisigAccounts.keys()]
+    const infos = [...graph.multisigEntries.keys()]
       .sort((a, b) => b - a) // sort from top to bottom
-      .map((key) => graph.multisigAccounts.get(key) || [])
+      .map((key) => graph.multisigEntries.get(key) || [])
       .filter((x) => x.length > 0)
 
     // flatten output

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PublicAccount, Deadline, UInt64 } from 'symbol-sdk'
+import { PublicAccount, Deadline, Transaction, UInt64 } from 'symbol-sdk'
 import { TransactionURI } from 'symbol-uri-scheme'
 
 // internal dependencies
@@ -125,7 +125,7 @@ export interface Standard {
     command: string,
     parameters: TransactionParameters,
     argv: CommandOption[],
-  ): Promise<TransactionURI>
+  ): Promise<TransactionURI<Transaction>>
 
   /**
    * Execute `command` for Security Token with identifier `tokenId`. Arguments
@@ -147,5 +147,5 @@ export interface Standard {
     command: string,
     parameters: TransactionParameters,
     argv: CommandOption[],
-  ): TransactionURI
+  ): TransactionURI<Transaction>
 }

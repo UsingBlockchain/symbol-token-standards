@@ -15,11 +15,13 @@
  */
 import { TransactionURI } from 'symbol-uri-scheme'
 import {
+  Address,
   AggregateTransaction,
   MosaicInfo,
   MultisigAccountInfo,
   PublicAccount,
   Transaction,
+  TransactionMapping,
 } from 'symbol-sdk'
 import { Wallet } from 'symbol-hd-wallets'
 
@@ -54,7 +56,7 @@ export abstract class AbstractCommand extends BaseCommand {
   /**
    * @description List of operators of said token.
    */
-  public operators: PublicAccount[] = []
+  public operators: Address[] = []
 
   /**
    * @description Mosaic information (read from network).
@@ -144,8 +146,8 @@ export abstract class AbstractCommand extends BaseCommand {
 
     // by default, only operators can execute commands
     const isOperator = this.operators.some(
-      (p: PublicAccount) => {
-        return p.publicKey === actor.publicKey
+      (p: Address) => {
+        return p.equals(actor.address)
       })
 
     // allows only operators to transfer ownership tokens
@@ -159,7 +161,7 @@ export abstract class AbstractCommand extends BaseCommand {
   public execute(
     actor: PublicAccount,
     argv?: CommandOption[]
-  ): TransactionURI {
+  ): TransactionURI<Transaction> {
     // verify authorization to execute
     super.assertExecutionAllowance(actor, argv)
 
@@ -167,7 +169,7 @@ export abstract class AbstractCommand extends BaseCommand {
     const contract = this.prepare()
 
     // return result
-    return new TransactionURI(contract.serialize())
+    return new TransactionURI(contract.serialize(), TransactionMapping.createFromPayload)
   }
 
   /**

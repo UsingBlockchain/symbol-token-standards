@@ -96,7 +96,7 @@ export abstract class BaseCommand implements Command {
   public abstract execute(
     actor: PublicAccount,
     argv: CommandOption[] | undefined,
-  ): TransactionURI
+  ): TransactionURI<Transaction>
 
   /**
    * Prepare the command's transactions. Some commands may require

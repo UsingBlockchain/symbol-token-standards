@@ -25,16 +25,17 @@ import {
   MosaicId,
   Order,
   PlainMessage,
-  QueryParams,
   ReceiptRepository,
   Transaction,
-  TransactionFilter,
+  TransactionGroup,
   TransactionInfo,
   TransactionRepository,
   TransactionService as LibTransactionService,
   TransactionType,
   TransferTransaction,
   UInt64,
+  Page,
+  ChainInfo,
 } from 'symbol-sdk'
 
 export class TransactionService {
@@ -370,30 +371,38 @@ export class TransactionService {
     exchangeAddress: Address,
     lastTransactionId?: string,
   ): Observable<Transaction[]> {
-    const queryParams = new QueryParams({pageSize: this.pageSize, order: Order.ASC, id: lastTransactionId});
-    // Filter transfer and aggregate transactions
-    const transactionFilter = new TransactionFilter({types: [
-      TransactionType.TRANSFER,
-      TransactionType.AGGREGATE_COMPLETE,
-      TransactionType.AGGREGATE_BONDED
-    ]});
-    return this.accountRepository
-      .getAccountTransactions(exchangeAddress, queryParams, transactionFilter).pipe(
-        // Get all transactions pending to be processed
-        expand((transactions: Transaction[]) => {
-          if (transactions.length === this.pageSize) {
-            return this.accountRepository.getAccountTransactions(
-              exchangeAddress,
-              new QueryParams({pageSize: this.pageSize,
-                order: Order.ASC,
-                id: transactions[transactions.length - 1].transactionInfo!.id}),
-              transactionFilter);
-          }
 
-          return EMPTY;
-        }),
-        concatMap((_) => _),
-        toArray())
+    // Filter transfer and aggregate transactions
+    return this.transactionHttp.search({
+      address: exchangeAddress,
+      group: TransactionGroup.Confirmed,
+      type: [
+        TransactionType.TRANSFER,
+        TransactionType.AGGREGATE_COMPLETE,
+        TransactionType.AGGREGATE_BONDED
+      ],
+      offset: lastTransactionId,
+    }).pipe(
+      // Get all transactions pending to be processed
+      expand((page: Page<Transaction>) => {
+        const transactions = page.data
+        if (transactions.length === this.pageSize) {
+          return this.transactionHttp.search({
+            address: exchangeAddress,
+            group: TransactionGroup.Confirmed,
+            type: [
+              TransactionType.TRANSFER,
+              TransactionType.AGGREGATE_COMPLETE,
+              TransactionType.AGGREGATE_BONDED
+            ],
+            offset: lastTransactionId,
+          }).toPromise();
+        }
+
+        return EMPTY;
+      }),
+      concatMap((_) => _.data),
+      toArray())
   }
   /* end block getUnprocessedTransactions */
 
@@ -408,9 +417,10 @@ export class TransactionService {
     transactions: Transaction[],
     requiredConfirmations: number,
   ): Observable<Transaction[]> {
-    return this.chainRepository.getBlockchainHeight().pipe(
+    return this.chainRepository.getChainInfo().pipe(
       // Determine if the transactions have received enough confirmations.
-      map((currentHeight: UInt64) => transactions.filter((transaction) => {
+      map((info: ChainInfo) => transactions.filter((transaction) => {
+        const currentHeight = info.height;
         const transactionHeight = transaction.transactionInfo!.height;
         return (currentHeight.subtract(transactionHeight)
           .compare(UInt64.fromUint(requiredConfirmations)) >= 0);
