@@ -1,6 +1,6 @@
 {
   "name": "symbol-token-standards",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Symbol library to handle Token Standards",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   "dependencies": {
     "rxjs": "^6.6.6",
     "symbol-hd-wallets": "^0.14.0",
-    "symbol-sdk": "^0.23.2",
+    "symbol-sdk": "^1.0.0",
     "symbol-uri-scheme": "^0.6.0"
   },
   "devDependencies": {
